@@ -1,10 +1,15 @@
-function paint(Direction,X,Y,ContSum) {
-    XY.value = 'X: '+X+' Y: '+Y+' сумма цифр: '+ContSum;
+function paint(json) {
+    let Direction = json['Direction'];
+    let X         = json['X'];
+    let Y         = json['Y'];
+    let ContSum   = json['ContSum'];
+    let Area      = json['Area'];
+    XY.value = 'X: '+X+' Y: '+Y+' сумма цифр: '+ContSum+' пройденая площадь: '+Area;
     ctx.clearRect(0,0,field_width, field_height);
     let selimg = img[Direction];
     let src    = selimg[numImg];
-    let sX = Math.round((X-offX)/10);
-    let sY = Math.round((Y-offY)/10);
+    let sX = Math.round(X/10);
+    let sY = Math.round(Y/10);
     ctx.drawImage(src, sX, sY);
     numImg++;
     if (numImg>=selimg.length) numImg = 0;
@@ -14,22 +19,20 @@ async function draw() {
     let response = await fetch('/status');
     if (response.ok) {
         let json = await response.json();
-        paint(json['Direction'],json['X'],json['Y'],json['ContSum']);
+        paint(json);
         } else {
             alert("Ошибка HTTP: " + response.status);
             }
     window.requestAnimationFrame(draw);
     }
 
-var img,numImg,XY,field,ctx,field_width,field_height,offX,offY;
+var img,numImg,XY,field,ctx,field_width,field_height;
 
 function start() {
     XY = document.getElementById('XY');
     field = document.getElementById('field');
     field_width  = field.width;
-    offX = 1000-Math.round(field_width/2);
     field_height = field.height;
-    offY = 1000-Math.round(field_height/2);
     ctx   = field.getContext('2d');
     
     img = new Object();
