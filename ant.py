@@ -11,41 +11,22 @@ class Ant(Thread):
         self.UDLR = ['Up','Down','Left','Right']
         self.work = False
         self.direction = random.choice(self.UDLR)
-        self.minX = self.X
-        self.maxX = self.X
-        self.minY = self.Y
-        self.maxY = self.Y
+        self.traces = []
        
     def setX(self,X):
         self.X = X
-        if X>self.maxX:
-            self.maxX = X
-        elif X<self.minX:
-            self.minX = X
 
     def getX(self):
         return self.X
 
     def setY(self,Y):
         self.Y = Y
-        if Y>self.maxY:
-            self.maxY = Y
-        elif Y<self.minY:
-            self.minY = Y
 
     def getY(self):
         return self.Y
 
     def getArea(self):
-        areaX = self.maxX-self.minX
-        areaY = self.maxY-self.minY
-        if areaX==0:
-            return areaY
-        elif areaY==0:
-            return areaX
-        elif areaX==0 and areaY==0:
-            return 0
-        return areaX*areaY
+        return len(self.traces)
 
     def setContSum(self,contSum):
         self.contSum = contSum
@@ -65,6 +46,11 @@ class Ant(Thread):
 
     def getDirection(self):
         return self.direction
+
+    def setTrace(self,nx,ny):
+        pix = (nx,ny)
+        if not (pix in self.traces):
+            self.traces.append(pix)
 
     @staticmethod
     def getSumOfDigits(num):
@@ -86,6 +72,7 @@ class Ant(Thread):
             self.setContSum(cont_sum)
             self.setX(nx)
             self.setY(ny)
+            self.setTrace(nx,ny)
         else:
             self.setDirection()
         if self.getWork():
