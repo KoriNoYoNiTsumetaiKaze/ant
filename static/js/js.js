@@ -5,25 +5,36 @@ function paint(json) {
     let ContSum   = json['ContSum'];
     let Area      = json['Area'];
     XY.value = 'X: '+X+' Y: '+Y+' сумма цифр: '+ContSum+' пройденая площадь: '+Area;
-    ctx.clearRect(0,0,field_width, field_height);
+    //ctx.clearRect(0,0,field_width, field_height);
     let selimg = img[Direction];
     let src    = selimg[numImg];
-    let sX = Math.round(X/10);
-    let sY = Math.round(Y/10);
-    ctx.drawImage(src, sX, sY);
+    //let sX = Math.round(X/10);
+    //let sY = Math.round(Y/10);
+    let sX = X-1000;
+    let sY = Y-1000;
+    //ctx.drawImage(src, sX, sY);
+    ctx.beginPath();
+    ctx.fillRect(sX, sY, sX+1, sY+1);
+    ctx.fill();
     numImg++;
     if (numImg>=selimg.length) numImg = 0;
     }
 
 async function draw() {
+    let work = true
     let response = await fetch('/status');
     if (response.ok) {
         let json = await response.json();
         paint(json);
+        work = json['Work'];
         } else {
             alert("Ошибка HTTP: " + response.status);
             }
-    window.requestAnimationFrame(draw);
+    if (work) {
+        window.requestAnimationFrame(draw);
+        } else {
+            alert("Finish!");
+            }
     }
 
 var img,numImg,XY,field,ctx,field_width,field_height;
