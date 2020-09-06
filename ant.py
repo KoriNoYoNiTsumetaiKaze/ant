@@ -7,6 +7,8 @@ DOWN  = 'Down'
 LEFT  = 'Left'
 RIGHT = 'Right'
 
+FLAG_DEBUG = False
+
 class Ant(Thread):
     def __init__(self):
         Thread.__init__(self)
@@ -87,7 +89,7 @@ class Ant(Thread):
         if xy in ltraces:
             return False
         cont_sum = self.getSumOfDigits(lx)+self.getSumOfDigits(ly)
-        logging.debug("run lx {} ly {} cont_sum {} {}".format(lx,ly,cont_sum, self.is_access(cont_sum)))
+        log("run lx {} ly {} cont_sum {} {}".format(lx,ly,cont_sum, self.is_access(cont_sum)))
         self.setContSum(cont_sum)
         return self.is_access(cont_sum)
 
@@ -117,37 +119,37 @@ class Ant(Thread):
     def run(self):
         lx = self.getX()
         ly = self.getY()
-        logging.debug("run lx {} ly {}".format(lx,ly))
+        log("run lx {} ly {}".format(lx,ly))
         self.identifyOptions(lx,ly)
-        logging.debug("run self.getOptions() {}".format(self.getOptions()))
+        log("run self.getOptions() {}".format(self.getOptions()))
         xyLeft  = self.getStrOption(lx-1,ly)
-        logging.debug("run xyLeft {}".format(xyLeft))
+        log("run xyLeft {}".format(xyLeft))
         xyRight = self.getStrOption(lx+1,ly)
-        logging.debug("run xyRight {}".format(xyRight))
+        log("run xyRight {}".format(xyRight))
         xyUp    = self.getStrOption(lx,ly-1)
-        logging.debug("run xyUp {}".format(xyUp))
+        log("run xyUp {}".format(xyUp))
         xyDown  = self.getStrOption(lx,ly+1)
-        logging.debug("run xyDown {}".format(xyDown))
+        log("run xyDown {}".format(xyDown))
         if self.checkOption(xyRight):
-            logging.info("run xyRight!")
+            log("run xyRight!")
             self.setX(lx+1)
             self.delOption(xyRight)
             self.setTrace(xyRight)
             self.setDirection(RIGHT)
         elif self.checkOption(xyDown):
-            logging.info("run xyDown!")
+            log("run xyDown!")
             self.setY(ly+1)
             self.delOption(xyDown)
             self.setTrace(xyDown)
             self.setDirection(DOWN)
         elif self.checkOption(xyLeft):
-            logging.info("run xyLeft!")
+            log("run xyLeft!")
             self.setX(lx-1)
             self.delOption(xyLeft)
             self.setTrace(xyLeft)
             self.setDirection(LEFT)
         elif self.checkOption(xyUp):
-            logging.info("run xyUp!")
+            log("run xyUp!")
             self.setY(ly-1)
             self.delOption(xyUp)
             self.setTrace(xyUp)
@@ -161,31 +163,35 @@ class Ant(Thread):
                 tx = int(listXY[0])
                 ty = int(listXY[1])
                 if tx<lx:
-                    logging.info("run traces xyLeft!")
+                    log("run traces xyLeft!")
                     self.setX(lx-1)
                     self.setDirection(LEFT)
                 elif tx>lx:
-                    logging.info("run traces xyRight!")
+                    log("run traces xyRight!")
                     self.setX(lx+1)
                     self.setDirection(RIGHT)
                 elif ty<ly:
-                    logging.info("run traces xyUp!")
+                    log("run traces xyUp!")
                     self.setY(ly-1)
                     self.setDirection(UP)
                 elif ty>ly:
-                    logging.info("run traces xyDown!")
+                    log("run traces xyDown!")
                     self.setY(ly+1)
                     self.setDirection(DOWN)
-        logging.debug("run x {} y {}".format(self.getX(),self.getY()))
-        logging.debug("run self.getOptions() {}".format(self.getOptions()))
-        logging.debug("run self.getTraces() {}".format(self.getTraces()))
-        logging.info("---------------------------------------------------")
+        log("run x {} y {}".format(self.getX(),self.getY()))
+        log("run self.getOptions() {}".format(self.getOptions()))
+        log("run self.getTraces() {}".format(self.getTraces()))
+        log("---------------------------------------------------")
         if self.getWork():
             Timer(1, self.run).start()
 
 logging.basicConfig(filename="sample.log", filemode='w', level=logging.DEBUG)
 app = Flask(__name__)
 ant = Ant()
+
+def log(txt):
+    if FLAG_DEBUG:
+        logging.debug(txt)
 
 @app.route('/')
 def index():
