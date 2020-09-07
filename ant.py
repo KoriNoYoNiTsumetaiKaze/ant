@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 import logging
-from threading import Thread, Timer
+from threading import Thread
+# from threading import Thread, Timer
 
 UP    = 'Up'
 DOWN  = 'Down'
@@ -117,75 +118,78 @@ class Ant(Thread):
         return xy in ltraces
 
     def run(self):
-        lx = self.getX()
-        ly = self.getY()
-        log("run lx {} ly {}".format(lx,ly))
-        self.identifyOptions(lx,ly)
-        log("run self.getOptions() {}".format(self.getOptions()))
-        xyLeft  = self.getStrOption(lx-1,ly)
-        log("run xyLeft {}".format(xyLeft))
-        xyRight = self.getStrOption(lx+1,ly)
-        log("run xyRight {}".format(xyRight))
-        xyUp    = self.getStrOption(lx,ly-1)
-        log("run xyUp {}".format(xyUp))
-        xyDown  = self.getStrOption(lx,ly+1)
-        log("run xyDown {}".format(xyDown))
-        if self.checkOption(xyRight):
-            log("run xyRight!")
-            self.setX(lx+1)
-            self.delOption(xyRight)
-            self.setTrace(xyRight)
-            self.setDirection(RIGHT)
-        elif self.checkOption(xyDown):
-            log("run xyDown!")
-            self.setY(ly+1)
-            self.delOption(xyDown)
-            self.setTrace(xyDown)
-            self.setDirection(DOWN)
-        elif self.checkOption(xyLeft):
-            log("run xyLeft!")
-            self.setX(lx-1)
-            self.delOption(xyLeft)
-            self.setTrace(xyLeft)
-            self.setDirection(LEFT)
-        elif self.checkOption(xyUp):
-            log("run xyUp!")
-            self.setY(ly-1)
-            self.delOption(xyUp)
-            self.setTrace(xyUp)
-            self.setDirection(UP)
-        else:
-            loptions = self.getOptions()
-            if len(loptions)==0:
-                self.work = False
+        while self.getWork():
+            lx = self.getX()
+            ly = self.getY()
+            log("run lx {} ly {}".format(lx,ly))
+            self.identifyOptions(lx,ly)
+            log("run self.getOptions() {}".format(self.getOptions()))
+            xyLeft  = self.getStrOption(lx-1,ly)
+            log("run xyLeft {}".format(xyLeft))
+            xyRight = self.getStrOption(lx+1,ly)
+            log("run xyRight {}".format(xyRight))
+            xyUp    = self.getStrOption(lx,ly-1)
+            log("run xyUp {}".format(xyUp))
+            xyDown  = self.getStrOption(lx,ly+1)
+            log("run xyDown {}".format(xyDown))
+            if self.checkOption(xyRight):
+                log("run xyRight!")
+                self.setX(lx+1)
+                self.delOption(xyRight)
+                self.setTrace(xyRight)
+                self.setDirection(RIGHT)
+            elif self.checkOption(xyDown):
+                log("run xyDown!")
+                self.setY(ly+1)
+                self.delOption(xyDown)
+                self.setTrace(xyDown)
+                self.setDirection(DOWN)
+            elif self.checkOption(xyLeft):
+                log("run xyLeft!")
+                self.setX(lx-1)
+                self.delOption(xyLeft)
+                self.setTrace(xyLeft)
+                self.setDirection(LEFT)
+            elif self.checkOption(xyUp):
+                log("run xyUp!")
+                self.setY(ly-1)
+                self.delOption(xyUp)
+                self.setTrace(xyUp)
+                self.setDirection(UP)
             else:
-                listXY = loptions[0].split('-')
-                tx = int(listXY[0])
-                ty = int(listXY[1])
-                if tx<lx:
-                    log("run traces xyLeft!")
-                    self.setX(lx-1)
-                    self.setDirection(LEFT)
-                elif tx>lx:
-                    log("run traces xyRight!")
-                    self.setX(lx+1)
-                    self.setDirection(RIGHT)
-                elif ty<ly:
-                    log("run traces xyUp!")
-                    self.setY(ly-1)
-                    self.setDirection(UP)
-                elif ty>ly:
-                    log("run traces xyDown!")
-                    self.setY(ly+1)
-                    self.setDirection(DOWN)
-        log("run x {} y {}".format(self.getX(),self.getY()))
-        log("run self.getOptions() {}".format(self.getOptions()))
-        log("run self.getTraces() {}".format(self.getTraces()))
-        log("---------------------------------------------------")
-        if self.getWork():
-            Timer(1, self.run).start()
+                loptions = self.getOptions()
+                if len(loptions)==0:
+                    self.work = False
+                else:
+                    listXY = loptions[0].split('-')
+                    tx = int(listXY[0])
+                    ty = int(listXY[1])
+                    if tx<lx:
+                        log("run traces xyLeft!")
+                        self.setX(lx-1)
+                        self.setDirection(LEFT)
+                    elif tx>lx:
+                        log("run traces xyRight!")
+                        self.setX(lx+1)
+                        self.setDirection(RIGHT)
+                    elif ty<ly:
+                        log("run traces xyUp!")
+                        self.setY(ly-1)
+                        self.setDirection(UP)
+                    elif ty>ly:
+                        log("run traces xyDown!")
+                        self.setY(ly+1)
+                        self.setDirection(DOWN)
+            log("run x {} y {}".format(self.getX(),self.getY()))
+            log("run self.getOptions() {}".format(self.getOptions()))
+            log("run self.getTraces() {}".format(self.getTraces()))
+            log("---------------------------------------------------")
+        # if self.getWork():
+            # Timer(1, self.run).start()
 
-logging.basicConfig(filename="sample.log", filemode='w', level=logging.DEBUG)
+if FLAG_DEBUG:
+    logging.basicConfig(filename="sample.log", filemode='w', level=logging.DEBUG)
+
 app = Flask(__name__)
 ant = Ant()
 

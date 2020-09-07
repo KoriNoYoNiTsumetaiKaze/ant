@@ -5,17 +5,18 @@ function paint(json) {
     let ContSum   = json['ContSum'];
     let Area      = json['Area'];
     XY.value = 'X: '+X+' Y: '+Y+' сумма цифр: '+ContSum+' пройденая площадь: '+Area;
-    //ctx.clearRect(0,0,field_width, field_height);
+    ctx.clearRect(0,0,field_width, field_height);
     let selimg = img[Direction];
     let src    = selimg[numImg];
     //let sX = Math.round(X/10);
     //let sY = Math.round(Y/10);
     let sX = X-1000;
     let sY = Y-1000;
-    //ctx.drawImage(src, sX, sY);
-    ctx.beginPath();
-    ctx.fillRect(sX, sY, sX+1, sY+1);
-    ctx.fill();
+    //console.log('sX: '+sX+' sY: '+sY);
+    ctx.drawImage(src, sX, sY);
+    //ctx.beginPath();
+    //ctx.fillRect(sX, sY, sX+1, sY+1);
+    //ctx.fill();
     numImg++;
     if (numImg>=selimg.length) numImg = 0;
     }
