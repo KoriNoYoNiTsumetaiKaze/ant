@@ -3,12 +3,36 @@
     <head>
         <title>Ant</title>
         <meta charset='utf-8' />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
         <script defer src="{{ url_for('static', filename='js/js.js') }}"></script>
     </head>
     <body>
         <div>
             <input type='text' readonly='readonly' size='60' id='XY'>
         </div>
-        <canvas height='1000' width='1000' id='field'>Обновите браузер</canvas>
+        <table>
+            <tr>
+                <th>
+                    Варианты движения
+                </th>
+                <th>
+                    Следы
+                </th>
+                <th>
+                    Графическое представление
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    <textarea id='options' rows='100'></textarea>
+                </td>
+                <td>
+                    <textarea id='traces' rows='100'></textarea>
+                </td>
+                <td>
+                    <canvas height='1000' width='1000' id='field'>Обновите браузер</canvas>
+                </td>
+            </tr>
+        </table>
     </body>
 </html>

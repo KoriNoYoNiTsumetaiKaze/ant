@@ -55,6 +55,9 @@ class Ant(Thread):
     def getTraces(self):
         return self.traces
 
+    def getTracesStr(self):
+        return '\n\r'.join(self.traces)
+
     def setDirection(self,direction):
         self.direction = direction
 
@@ -76,13 +79,17 @@ class Ant(Thread):
     def getOptions(self):
         return self.options
 
+    def getOptionsStr(self):
+        return '\n\r'.join(self.options)
+
     def checkOption(self,xy):
         loptions = self.getOptions()
         return xy in loptions
 
     @staticmethod
     def getStrOption(lx,ly):
-        return str(lx)+'-'+str(ly)
+        cont_sum = Ant.getSumOfDigits(lx)+Ant.getSumOfDigits(ly)
+        return str(lx)+'-'+str(ly)+'-'+str(cont_sum)
 
     def checkDir(self,lx,ly):
         xy = self.getStrOption(lx,ly)
@@ -210,7 +217,16 @@ def index():
 
 @app.route('/status')
 def status():
-    d = {'Direction': ant.getDirection(), 'X': ant.getX(), 'Y': ant.getY(), 'ContSum': ant.getContSum(), 'Area': ant.getArea(), 'Work':ant.getWork()}
+    d = {
+        'Direction': ant.getDirection(),
+        'X': ant.getX(),
+        'Y': ant.getY(),
+        'ContSum': ant.getContSum(),
+        'Area': ant.getArea(),
+        'Work':ant.getWork(),
+        'traces': ant.getTracesStr(),
+        'options':ant.getOptionsStr()
+        }
     return d
 
 if __name__ == "__main__":

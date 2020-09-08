@@ -28,6 +28,8 @@ async function draw() {
         let json = await response.json();
         paint(json);
         work = json['Work'];
+        options.value = json['options'];
+        traces.value = json['traces'];
         } else {
             alert("Ошибка HTTP: " + response.status);
             }
@@ -38,10 +40,12 @@ async function draw() {
             }
     }
 
-var img,numImg,XY,field,ctx,field_width,field_height;
+var img,numImg,XY,field,ctx,field_width,field_height,options,traces;
 
 function start() {
     XY = document.getElementById('XY');
+    options = document.getElementById('options');
+    traces = document.getElementById('traces');
     field = document.getElementById('field');
     field_width  = field.width;
     field_height = field.height;
