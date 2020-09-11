@@ -1,22 +1,17 @@
 function paint(json) {
     let Direction = json['Direction'];
-    let X         = json['X'];
-    let Y         = json['Y'];
-    let ContSum   = json['ContSum'];
-    let Area      = json['Area'];
+    let X         = Number(json['X']);
+    let Y         = Number(json['Y']);
+    let ContSum   = Number(json['ContSum']);
+    let Area      = Number(json['Area']);
     XY.value = 'X: '+X+' Y: '+Y+' сумма цифр: '+ContSum+' пройденая площадь: '+Area;
     ctx.clearRect(0,0,field_width, field_height);
+    if (Direction!='Up' && Direction!='Down' && Direction!='Left' && Direction!='Right') Direction = 'Right';
     let selimg = img[Direction];
     let src    = selimg[numImg];
-    //let sX = Math.round(X/10);
-    //let sY = Math.round(Y/10);
     let sX = X-1000;
     let sY = Y-1000;
-    //console.log('sX: '+sX+' sY: '+sY);
     ctx.drawImage(src, sX, sY);
-    //ctx.beginPath();
-    //ctx.fillRect(sX, sY, sX+1, sY+1);
-    //ctx.fill();
     numImg++;
     if (numImg>=selimg.length) numImg = 0;
     }
@@ -28,8 +23,8 @@ async function draw() {
         let json = await response.json();
         paint(json);
         work = json['Work'];
-        options.value = json['options'];
-        traces.value = json['traces'];
+        options.value = String(json['options']);
+        traces.value = String(json['traces']);
         } else {
             alert("Ошибка HTTP: " + response.status);
             }
